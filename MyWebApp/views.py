@@ -20,7 +20,7 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('MyWebApp.views.post_detail.html', pk=post.pk)
+            return redirect('MyWebApp.views.post_detail', pk=post.pk)
     else:
         form = PostForm()
     return render(request, 'MyWebApp/post_edit.html', {'form': form})
@@ -38,3 +38,22 @@ def post_edit(request, pk):
     else:
         form = PostForm(instance=post)
     return render(request, 'MyWebApp/post_edit.html', {'form': form})
+'''
+#http://stackoverflow.com/questions/3124658/django-delete-object
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    #+some code to check if this object belongs to the logged in user
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+
+        if form.is_valid(): # checks CSRF
+            post.delete()
+            return redirect('MyWebApp.views.post_detail.html', pk=post.pk)
+
+    else:
+        form = PostForm(instance=post)
+
+    template_vars = {'form': form}
+    return render(request, 'MyWebApp/post_detail.html', template_vars)
+    '''
